@@ -1,2 +1,4 @@
-# js-note
-Javascript笔记
+# JavaScript-Note
+
+
+
