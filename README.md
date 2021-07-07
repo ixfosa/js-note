@@ -1,4 +1,4 @@
-# JavaScript-Note
+# JS-Note
 
 
 

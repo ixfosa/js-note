@@ -1,4 +1,6 @@
-+ [JavaScript简介](notes/01-js简介)
++ [基础知识](notes/01-js简介)
+
++ [基础语法](notes/02-基础语法)
 
   
 
