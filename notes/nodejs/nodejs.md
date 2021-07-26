@@ -33,16 +33,64 @@
 
 
 
-+ 
+
 
 
 
 ## 包管理器 NPM
 
 + NPM 是 Node.js 中的包管理器。管理 Node.js 各种模块 
-+ 
 
-## Module 模块机制
+
+
+
+
+## global 全局对象
+
+JavaScript 中有一个特殊的对象，称为全局对象（Global Object），它及其所有属性都可以在程序的任何地方访问，即全局变量。
+
+在浏览器 JavaScript 中，通常 window 是全局对象， 而 Node.js 中的全局对象是 global，所有全局变量（除了 global 本身以外）都是 global 对象的属性。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+
++ global （全局变量）
+
+  node中有一个全局变量global，是node中最大的一个对象，相当于浏览器中的window对象，global中的成员在使用时，可以省略global
+
+  + console          打印
+  + process          和进程相关的对象
+  + setInterval      是node中的，不是浏览器中的
+  + require()         它是全局对象global中的一个方法，用于在js文件中引入另外的文件
+  + __dirname     当前执行文件的绝对路径（在js文件中使用）
+  + __filename     当前执行文件的绝对路径，包含文件名（在js文件中使用）
+  + module
+
++ ECMAScript
+
++ 模块
+
+  + fs
+  + path
+  + http
+  + os ...
+
+
+
+### 全局对象与全局变量
+
+
+
+## console 
+
+
+
+## 核心模块
+
+### Module 模块机制
+
+
+
+
+
+
 
 
 
