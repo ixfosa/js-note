@@ -650,6 +650,9 @@
 
 ### 全局组件
 
+* 应用场景: 多出使用的公共性功能组件，就可以注册成全局组件,减少冗余代码
+* 全局API `Vue.component('组件名',组件对象);`
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -705,7 +708,7 @@
                 }
             },
             
-        })
+        });
 
         // 子组件
         let Vheader = {
@@ -767,7 +770,104 @@
 
 
 
+### 父子组件传值-父传子
 
+1. 父用子的时候通过属性Prop传递
+2. 子要声明props:['属性名'] 来接收
+3. 收到就是自己的了，随便你用
+   + 在template中 直接用
+   + 在js中 this.属性名 用
+
+
+
+> 总结:父传,子声明,就是子的了
+>
+> 补充: 常量传递直接用，变量传递加冒号
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        .box {
+            width: 300px;
+            height: 300px;
+            background-color: yellowgreen;
+        }
+    
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+
+
+        // 子组件
+        let Vbox = {
+            template: `
+                <div class="box">
+                    <ul>
+                        <li v-for = "(item, idx) in users">
+                            {{ item.name }}    
+                        </li>   
+                    </ul>
+                </div>
+            `,
+            props: ["users"]
+        };
+
+
+        // 1.声明局部组件
+        let App = {
+            template: `
+                <div class="main">
+                    <Vbox :users="users"></Vbox>
+                </div>
+            `,
+            components: {
+                Vbox
+            },
+            data: function() {
+                return {
+                    users: [
+                        {id: 1, name: "ixfosa"},
+                        {id: 2, name: "long"},
+                        {id: 3, name: "zhong"}
+                    ]
+                };
+            }
+        }
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+             // 2.挂载组件
+             components: {
+                App
+            },
+            template: `<App></App>`
+        });
+	</script>
+</body>
+</html>
+```
+
+
+
+
+
+### 通过事件向父组件发送消息
 
 
 
