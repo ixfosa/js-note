@@ -1292,12 +1292,10 @@
 
 
 
-### 监视改动 
+### 监视改动  watch 
 
 * watch 监视单个
 * computed 监视多个
-
-#### watch 
 
 ```html
 <!DOCTYPE html>
@@ -1351,17 +1349,164 @@
 
 
 
+### 属性计算 computed 
+
+computed - getter
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		ul{
+			list-style: none;
+		}
+		ul li{
+			margin: 20px 20px;
+			padding: 10px 5px;
+			border-radius: 3px;
+		}
+		ul li.active{
+			background-color: #66FFFF;
+		}
+
+	</style>
+</head>
+<body>
+    <div id="app">
+        <audio :src="getCurrentSongSrc" autoplay  controls></audio>
+        <ul>
+            <li v-for="(item, index) in musicData" :class="{active:currentIndex == index}" @click="clickHandler(index)">
+                <h3> 歌名：{{ item.name }}</h3>
+                <p>歌手: {{ item.author }}</p>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+        let musicData = [
+                {id:1,name:'于荣光 - 少林英雄',author:'于荣光',songSrc:'./static/于荣光 - 少林英雄.mp3'},
+                {id:2,name:'Joel Adams - Please Dont Go',author:'Joel Adams',songSrc:'./static/Joel Adams - Please Dont Go.mp3'},
+                {id:3,name:'MKJ - Time',author:'MKJ',songSrc:'./static/MKJ - Time.mp3'},
+                {id:4,name:'Russ - Psycho (Pt. 2)',author:'Russ',songSrc:'./static/Russ - Psycho (Pt. 2).mp3'}
+            ]
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    musicData: musicData,
+                    currentIndex: 0
+                };
+            },
+            computed: {
+                getCurrentSongSrc: function() {
+                    // 默认只有getter
+                    return this.musicData[this.currentIndex].songSrc;
+                }
+            },
+            methods: {
+                clickHandler: function(index) {
+                    this.currentIndex = index;
+                }
+            },
+        });
+    </script>
+
+</body>
+</html>
+```
 
 
-#### computed 
 
+computed - setter
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		ul{
+			list-style: none;
+		}
+		ul li{
+			margin: 20px 20px;
+			padding: 10px 5px;
+			border-radius: 3px;
+		}
+		ul li.active{
+			background-color: #66FFFF;
+		}
 
-### 计算属性 computed
+	</style>
+</head>
+<body>
+    <div id="app">
+        <audio :src="getCurrentSongSrc" autoplay  controls></audio>
+        <ul>
+            <li v-for="(item, index) in musicData" :class="{active:currentIndex == index}" @click="clickHandler(index)">
+                <h3> 歌名：{{ item.name }}</h3>
+                <p>歌手: {{ item.author }}</p>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
 
-
-
-
+        let musicData = [
+                {id:1,name:'于荣光 - 少林英雄',author:'于荣光',songSrc:'./static/于荣光 - 少林英雄.mp3'},
+                {id:2,name:'Joel Adams - Please Dont Go',author:'Joel Adams',songSrc:'./static/Joel Adams - Please Dont Go.mp3'},
+                {id:3,name:'MKJ - Time',author:'MKJ',songSrc:'./static/MKJ - Time.mp3'},
+                {id:4,name:'Russ - Psycho (Pt. 2)',author:'Russ',songSrc:'./static/Russ - Psycho (Pt. 2).mp3'}
+            ]
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    musicData: musicData,
+                    currentIndex: 0
+                };
+            },
+            computed: {
+                getCurrentSongSrc: {
+					set:function(newV) {
+						console.log(newV); //索引
+						this.currentIndex = newV;
+					},
+					get:function() {
+						return this.musicData[this.currentIndex].songSrc;
+					}
+				}
+            },
+            methods: {
+                clickHandler: function(index) {
+                    // this.currentIndex = index;
+                    console.log(this.getCurrentSongSrc);
+                    this.getCurrentSongSrc = index;
+                }
+            },
+         
+        });
+    </script>
+</body>
+</html>
+```
 
 
 
