@@ -768,6 +768,158 @@
 </html>
 ```
 
+### 全局组件的使用
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        .head {
+            width: 100%;
+            height: 60px;
+            background-color: yellowgreen;
+        }
+
+        .main-content {
+            width: 100%;
+            height: 500px;
+            display: flex;
+        }
+
+        .aside {
+            width: 25%;
+            height: 100%;
+            background-color: green;
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+            background-color: pink;
+        }
+
+        .default {
+            display: inline-block;
+            line-height: 1;
+            white-space: nowrap;
+            cursor: pointer;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            border-color: #dcdfe6;
+            color: #606266;
+            text-align: center;
+            box-sizing: border-box;
+            outline: none;
+            margin: 0;
+            transition: .1s;
+            font-weight: 500;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .success {
+            color: #fff;
+            background-color: #67c23a;
+            border-color: #67c23a;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+        // 全局组件
+        // slot 元素作为承载分发内容的出口
+        Vue.component("Vbtn", {
+            template: `
+                <button class="default" :class="type">
+                    <slot></slot>
+                </button>
+            `,
+            props: ["type"]
+        });
+
+        // 子组件
+        let Vheader = {
+            template: `
+                <div class="head">
+                    header
+                    <Vbtn @click.native="def">默认</Vbtn>
+                </div>
+            `,
+            methods: {
+                def(e) {
+                    console.log(e.target.innerText);
+                }
+            },
+        };
+        let Vaside = {
+            template: `
+                <div class="aside">
+                    aside
+                    <Vbtn type="success">刷新</Vbtn>
+                </div>
+            `,
+        };
+        let Vcontent = {
+            template: `
+                <div class="content">
+                    content
+                    <Vbtn type="default" @click.native="add">添加</Vbtn>
+                </div>
+            `,
+            methods: {
+                add(e) {
+                    console.log(e.target.innerText);
+                }
+            },
+        };
+
+        // 1.声明局部组件
+        let App = {
+            template: `
+                <div class="main">
+                    <Vheader></Vheader>
+                    <div class="main-content">
+                        <Vaside></Vaside>
+                        <Vcontent></Vcontent>
+                    </div>
+                </div>
+            `,
+            components: {
+                Vheader,
+                Vaside,
+                Vcontent
+            }
+        }
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+             // 2.挂载组件
+             components: {
+                App
+            },
+            template: `<App></App>`
+        });
+	</script>
+</body>
+</html>
+```
+
+
+
 
 
 ### 父子组件传值-父传子
@@ -802,7 +954,6 @@
             height: 300px;
             background-color: yellowgreen;
         }
-    
     </style>
 </head>
 <body>
@@ -865,9 +1016,360 @@
 
 
 
-
-
 ### 通过事件向父组件发送消息
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        .box {
+            width: 300px;
+            height: 300px;
+            background-color: yellowgreen;
+        }
+    
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+         
+        // 子组件
+        let Vbox = {
+            template: ` 
+                <div class="box">
+                    <ul>
+                        <li v-for = "(item, idx) in users">
+                            {{ item.name }}    
+                        </li>   
+                    </ul>
+                </div>
+            `,
+            props: ["users"]
+        
+        };
+
+        let Vbtn = {
+            template: `<button  @click = 'changeFontSize'>字体变大</button>`,
+            methods: {
+                changeFontSize() {
+                    // 触发父组件 中声明的自定义事件   vue $emit()
+					// 第一个参数是触发自定义事件的名字 第二个参数就是传进去的值
+                    this.$emit("change");
+                }
+            }
+        };
+
+        // 1.声明局部组件
+        let App = {
+            template: `
+                <div class="main" :style='{fontSize:postFontSize+"em"}'>
+                    <Vbtn @change="changeFontSize" />
+                    <Vbox :users="users"></Vbox>
+                </div>
+            `,
+            components: {
+                Vbtn,
+                Vbox
+            },
+            data: function() {
+                return {
+                    users: [
+                        {id: 1, name: "ixfosa"},
+                        {id: 2, name: "long"},
+                        {id: 3, name: "zhong"}
+                    ],
+                    postFontSize: 1
+                };
+            },
+            methods: {
+                changeFontSize() {
+                    this.postFontSize += .1;
+                }
+            }
+        }
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+             // 2.挂载组件
+             components: {
+                App
+            },
+            template: `<App></App>`
+        });
+	</script>
+</body>
+</html>
+```
+
+
+
+### 具名插槽 slot
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div id="app"></div>
+
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script>
+
+        Vue.component("mySlot", {
+            template: `
+                <div>
+                    预留的第一个坑
+                    <slot name = "two"></slot>
+                    预留的第二个坑
+                    <slot name = "one"></slot>
+                </div>
+            `,
+        })
+        new Vue({
+            el: "#app",
+            template: `
+            <div>
+                <mySlot>
+                    <p slot="one">我是第一个坑</p>
+                    <p slot="two">我是第二个坑</p>
+                </mySlot>
+            </div>
+            `
+        }); 
+    </script>
+</body>
+</html>
+```
+
+```html
+预留的第一个坑
+我是第二个坑
+
+预留的第二个坑
+我是第一个坑
+```
+
+
+
+### 过滤器
+
+#### 全局过滤器 filter
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="app">
+        {{ msg | myReverse }}
+    </div>
+
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+        // 全局过滤器
+        Vue.filter("myReverse", function(value) {
+            return value.split("").reverse().join("");
+        })
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+            
+            data() {
+                return {
+                    msg: "euV olleH"
+                };
+            }
+        });
+	</script>
+</body>
+</html>
+```
+
+#### 组件内部过滤器 filters
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="app"></div>
+    
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+    
+        // 全局过滤器
+
+		Vue.filter('myReverse',function(value, arg) {
+			
+			return arg + ' ' + value.split('').reverse().join('');
+		});
+
+        /*
+        在组件内部用 filters:{
+			过滤器的名字:function(value){
+
+				// 内部一定要return 
+	
+			}
+
+			调用过滤器 ：  数据属性 | 过滤器的名字
+		}
+		*/
+
+        let App = {
+            template: `
+                <div>
+                    <input type="number" v-model="price" />
+                    <p>{{ price | myCurrentcy }}</p>    
+                    <p>{{ msg | myReverse("haha") }}</p>
+                </div>
+            `,
+            filters: {
+                myCurrentcy(value) {
+                    return "¥" + value;
+                }
+            },
+            data() {
+                return {
+                    price: 0
+                };
+            },
+            props: ["msg"]
+        }
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    msg: "euV olleH"
+                };
+            },
+            components: {
+                App
+            },
+            template: `<App :msg="msg"></App>`
+        });
+	</script>
+</body>
+</html>
+```
+
+
+
+### 监视改动 
+
+* watch 监视单个
+* computed 监视多个
+
+#### watch 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model = "msg" />
+        <p>{{ msg }}</p>
+        <button @click="user.name='long'">改变</button>
+        <p>{{ user.name }}</p>
+    </div>
+
+    <script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+        new Vue({
+            el: "#app",
+            data: function () {
+                return {
+                    msg: "",
+                    user: {name: "ixfosa"}
+                };
+            },
+            watch: {
+                msg: function(newV, oldV) {
+                    console.log(newV, oldV)
+                    if (oldV == "long") {
+                        alert("Hello Long");
+                    }
+                },
+
+                // 监听复杂数据类型  object, array 深度监视  
+                user: {
+                    deep: true,
+                    handler: function(newV, oldV) {
+                        alert(oldV.name);
+                    }
+                }
+            }
+        });
+    
+    </script>
+</body>
+</html>
+```
+
+
+
+
+
+#### computed 
+
+
+
+### 计算属性 computed
+
+
+
+
+
+
+
+### 组件生命周期
+
+
+
+## 
 
 
 
