@@ -1512,9 +1512,163 @@ computed - setter
 
 ### 组件生命周期
 
+* 需要频繁的创建和销毁组件
+  - 比如页面中部分内容显示与隐藏，但是用的是v-if
+* 组件缓存
+  - 内置组件中`<keep-alive>`
+  - 被其包裹的组件，在v-if=false的时候，不会销毁，而是停用
+  - v-if="true" 不会创建,而是激活
+  - 避免频繁创建组件对象的性能损耗
+* **生命周期钩子**比较
+  - `created` 和 `beforeCreate`
+    + A 可以操作数据 B 数据没有初始化
+  - `mounted` 和 `beforeMount`
+    + A 可以操作DOM B 还未生成DOM
+  - `updated` 和 `beforeUpdate`
+    + A 可以获取最终数据 B 可以二次修改
+  - 频繁销毁创建的组件使用内置组件`<keep-alive></keep-alive>`包裹
+
+```js
+// 生命周期的钩子函数   函数
+    beforeCreate
+    created
+    beforeMount
+    mounted
+    beforeUpdate
+    updated
+    activated
+    deactivated
+    beforeDestroy
+    destroyed
+    
+    
+    
+    activated(){  //激活的 keep-alive v-if="true"
+        console.log('activated')
+	},
+	deactivated(){  //停用的 keep-alive v-if="false"
+		console.log('deactivated')
+	},
+	beforeDestroy(){ //销毁前 v-if="false"
+		console.log('beforeDestroy')
+	},
+	destroyed(){//销毁后 v-if="false"
+		console.log('destroyed')
+	},
+```
+
+<img src="../../_media/lifecycle.png" alt="lifecycle" style="zoom:80%;" />
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+        let Test = {
+            template: `
+                <div>
+                    <p>{{ msg }}</P>
+                    <button @click="changeHandler">改变</button>
+                </div>
+            `,
+            data() {
+                return {
+                    msg: "Hello Vue"
+                };
+            },
+            methods: {
+                changeHandler() {
+                    this.msg += "Hello JS | ";
+                }
+            },
+            beforeCreate() {
+                // 组件创建之前
+				console.log(this.msg);
+            },
+            created() {
+                // 组件创建之后
+				// 使用该组件，就会调用created方法 在created这个方法中可以操作后端的数据，数据响应视图
+				// 应用： 发起ajax请求
+				console.log(this.msg);
+				this.msg = 'change';
+            },
+            beforeMount() {
+                // 挂载数据到DOM之前会调用
+				console.log(document.getElementById('app'));
+            },
+            mounted() {
+                // 挂载数据到DOM之后会调用  Vue 作用以后的DOM
+				console.log(document.getElementById('app'));
+            },
+            beforeUpdate() {
+                // 在更新DOM之前 调用此钩子函数 应用：可以获取原始的DOM
+				console.log(document.getElementById('app').innerHTML);
+            },
+            updated() {
+                // 在更新DOM之后 调用此钩子函数 应用：可以获取最新的DOM
+				console.log(document.getElementById('app').innerHTML);
+            },
+            beforeDestroy() {
+                console.log('beforeDestroy');
+            },
+            destroyed() {
+                console.log('destroyed');
+            },
+            activated() {
+                console.log('组件被激活了');
+            },
+            deactivated() {
+                console.log('组件被停用了');
+            },
+        }
+        let App = {
+            // Vue的内置组件，能在组件的切换过程中将状态保留在内存中父，防止重复渲染DOM
+            template: `
+                <div class='app'>
+                    <!-- <keep-alive>
+                        <Test v-if = 'isShow'></Test>
+                    </keep-alive> -->
+                    <Test v-if = 'isShow'></Test>
+                    <button @click="isWhow = !isShow">isActive</button>
+                </div>
+            `,
+            data() {
+                return {
+                    isShow: true
+                };
+            },
+            components: {
+                Test
+            }
+        };
+
+        new Vue({
+            el: "#app",
+            template: "<App />",
+            components: {
+                App
+            }
+        });
+	</script>
+</body>
+</html>
+```
 
 
-## 
 
 
 
+
+
+
+
+## 获取DOM元素
