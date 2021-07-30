@@ -1172,9 +1172,9 @@
 
 
 
-### 过滤器
+## 过滤器
 
-#### 全局过滤器 filter
+### 全局过滤器 filter
 
 ```html
 <!DOCTYPE html>
@@ -1214,7 +1214,7 @@
 </html>
 ```
 
-#### 组件内部过滤器 filters
+### 组件内部过滤器 filters
 
 ```html
 <!DOCTYPE html>
@@ -1292,7 +1292,7 @@
 
 
 
-### 监视改动  watch 
+## 监视改动  watch 
 
 * watch 监视单个
 * computed 监视多个
@@ -1349,9 +1349,9 @@
 
 
 
-### 属性计算 computed 
+## 属性计算 computed 
 
-computed - getter
+### computed - getter
 
 ```html
 <!DOCTYPE html>
@@ -1427,7 +1427,7 @@ computed - getter
 
 
 
-computed - setter
+### computed - setter
 
 ```html
 <!DOCTYPE html>
@@ -1510,7 +1510,7 @@ computed - setter
 
 
 
-### 组件生命周期
+## 组件生命周期
 
 * 需要频繁的创建和销毁组件
   - 比如页面中部分内容显示与隐藏，但是用的是v-if
@@ -1665,10 +1665,206 @@ computed - setter
 
 
 
+## 获取DOM元素及添加事件
+
+### 获取DOM元素
+
++ 绑定： `<tag ref="name"></tag>`
+  + `ref` 属性值 不能重名
++ 获取：`this.$refs.name`
 
 
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+        let SubComponent = {
+            template: `
+                <div></div>
+            `
+        };
+
+        Vue.component("SubCom", SubComponent);
+
+        let App = {
+            template: `
+                <div>
+                    <button ref="btn1">btn1</button>
+                    <button ref="btn2">btn2</button>    
+                    <button ref="btn2">btn2</button>
+                    
+                    <SubCom> ref="sub""></SubCom>
+                </div>
+            `,
+            created() {
+                // created: undefined
+                console.log( "created: " + this.$refs.btn1);
+            },
+            beforeMount() {
+                beforeMount: undefined
+                console.log("beforeMount: " + this.$refs.btn1);
+            },
+            mounted() {
+
+                // 如果是给标签绑定ref属性，使用this.$refs.xxx 获取的是原生js的DOM对象
+				// ref 属性值 不能重名
+				// 如果是给组件绑定的ref属性 那么this.$refs.xxx获取的是组件对象
+                // mounted: [object HTMLButtonElement]
+                // mounted: [object HTMLButtonElement]
+                // mounted: undefined
+                console.log("mounted: " + this.$refs.btn1);
+                console.log("mounted: " + this.$refs.btn2);
+                console.log("mounted: " + this.$refs.sub);
+            },
+        };
+
+        new Vue({
+            el: "#app",
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+    </script>
+</body>
+</html>
+```
 
 
 
-## 获取DOM元素
+### 添加事件
+
++ `this.$nextTick(fn)`
+
+  在DOM更新循环结束之后执行延迟回调，在修改数据之后使用 $nextTick 可以在回调中获取到更新后的DOM
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+        let App = {
+            template: `
+                <div>
+                    <input type="text"  v-show = 'isShow' ref = 'input'/>
+                </div>
+            `,
+            data() {
+                return {
+                    isShow: false
+                };
+            },
+            mounted() {
+
+                this.isShow = true;
+                // 挂在之后获取焦点
+                // this.$refs.input.focus(); // 无法获取
+                
+                // $nextTick 是在DOM更新循环结束之后执行延迟回调，
+                // 在修改数据之后使用 $nextTick 可以在回调中获取到更新后的DOM
+                this.$nextTick(() => {
+                        // 更新之后的DOM
+                        this.$refs.input.focus(); // 获取成功
+                }); 
+            },
+        };
+
+        new Vue({
+            el: "#app",
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+    </script>
+</body>
+</html>
+```
+
+
+
+## vue-router
+
+### 前端路由原理
+
+```js
+www.ixfosa.top/#/hello
+	http://www.ixfosa.top  为真实的路径
+	#/hello                则为网页中的位置，称为锚点
+
+
+location.hash
+	获取： #/hello
+
+
+监听 location.hash
+window.onhashchange = function() {
+
+}
+
+前端路由原理：
+	通过事件 onhashchange 获取 location.hash 的锚点值，通过对 锚点值 值的判断调用不同模块
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="#/login">login</a>
+    <a href="#/register">register</a>
+    <div id="app">
+
+    </div>
+    <script>
+        let oDiv = document.getElementById("app");
+        window.onhashchange = function() {
+            console.log(location.hash);
+
+            switch (location.hash) {
+                case "#/login":
+                    oDiv.innerHTML = "login page";
+                    break;
+                case "#/register":
+                    oDiv.innerHTML = "register page";
+                    break;
+                default: 
+                    oDiv.innerHTML = "default page";
+            }
+        }
+    </script>
+</body>
+</html>
+```
+
+
+
+### vue-router的使用
+
