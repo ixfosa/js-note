@@ -1868,3 +1868,521 @@ window.onhashchange = function() {
 
 ### vue-router的使用
 
+* vue-router ：其是vue的核心插件
+
+* 下载 `npm i vue-router -S`
+* vue-router中的对象
+  * `$route` 路由信息对象,只读对象
+  * `$router` 路由操作对象,只写对象
+
++ 参数router-link,
+  + `Vue.prototype.xxx = {add: fn}`   所有组件中，使用this.xxx就能拿到这个对象
+  + 查询字符串 
+    * 1: 配置`:to="{name:'detail',query:{id:hero.id} }"`
+    * 2: 规则 `{name:'detail',path:'/detail',component:Detail}`
+    * 3: 获取 `this.$route.query.id`
+    * 4: 生成 `<a href="/detail?id=1">`
+  + path方式 
+    * 1: 配置 `:to="{name:'detail',params:{id:hero.id}  }"`
+    * 2: 规则 `{ name:'detail',path:'/detail/:id'}`
+    * 3: 获取 `this.$route.params.id`
+    * 4: 生成 `<a href="/detail/1">`
+
++ vue-router的使用
+
+  * `<router-link to="/path" > ` 默认会被渲染成a标签，`to ` 默认会被渲染成href属性
+  *  `<router-view>` 路由组件的出口
+
+  ```js
+  Vue.use(插件对象);   //  过程中会注册一些全局组件,及给vm或者组件对象挂在属性
+  
+  // 给vm及组件对象挂在的方式  :  
+  Object.defineProperty(Vue.prototype,'$router', {
+  get:function () {
+      return 自己的router对象;
+  
+      }
+  })
+  ```
+
+  
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+       
+	<!-- 引包 -->
+	<script type="text/javascript" src="vue.js"></script>
+    <!-- 引包 引入 核心的插件vue-router -->
+	<script type="text/javascript" src="vue-router.js"></script>
+	<script type="text/javascript">
+
+        // 1.让vue使用该VueRouter创建
+        Vue.use(VueRouter);
+
+        // 2.声明组件
+        let Login = {
+            template: `<h3>login</h3>`
+        }
+        let Register = {
+            template: `<h3>register</h3>`
+        }
+       
+        // 3.创建路由对象
+        let router = new VueRouter({
+            // 3.1对象
+            routes: [
+                // 3.2配置规则
+                {
+                    path: "/login",
+                    component: Login
+                },
+                {
+                    path: "/register",
+                    component: Register
+                }
+            ]
+        });
+
+        // 抛出两个全局的组件 router-link  router-view
+        let App = {
+            template: `
+                <div>
+                    <!-- router-link默认会被渲染成a标签，to默认会被渲染成href属性 -->
+                    <router-link to="/login">login</router-link>
+                    <router-link to="/register">register</router-link>
+
+                    <!-- 路由组件的出口 -->
+                    <router-view></router-view>
+                </div>
+            `,
+            
+        }
+
+        // 将配置好的路由对象关联到vue实例化对象中
+        new Vue({
+            el: "#app",
+            router: router,
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+	</script>
+</body>
+</html>
+```
+
+
+
+### 命名路由
+
++ `<router-link :to="{name:'name'}">`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+       
+	<!-- 引包 -->
+	<script type="text/javascript" src="vue.js"></script>
+    <!-- 引包 引入 核心的插件vue-router -->
+	<script type="text/javascript" src="vue-router.js"></script>
+	<script type="text/javascript">
+
+        // 让vue使用该VueRouter创建 如果vue是一个局部作用域的对象 那么必须Vue.use(VueRouter);
+        // Vue.use(VueRouter);
+
+        // 声明组件
+        let Login = {
+            template: `<h3>login</h3>`
+        };
+        let Register = {
+            template: `<h3>register</h3>`
+        };
+       
+        // 创建路由对象
+        let router = new VueRouter({
+            // 配置路由对象
+            routes: [
+                // 路由匹配的规则
+                {
+                    path: "/login",
+                    name: "login",
+                    component: Login
+                },
+                {
+                    path: "/register",
+                    name: "register",
+                    component: Register
+                }
+            ]
+        });
+
+        // 抛出两个全局的组件 router-link  router-view
+        let App = {
+            template: `
+                <div>
+                    <!-- router-link默认会被渲染成a标签，to默认会被渲染成href属性 -->
+                    <router-link :to="{name:'login'}">login</router-link>
+                    <router-link :to="{name:'register'}">register</router-link>
+
+                    <!-- 路由组件的出口 -->
+                    <router-view></router-view>
+                </div>
+            `,
+        };
+
+        // 将配置好的路由对象关联到vue实例化对象中
+        new Vue({
+            el: "#app",
+            router: router,
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+	</script>
+</body>
+</html>
+```
+
+
+
+### 路由参数
+
+地址栏 路由范式
+
++ vue.html#/user/1          params 动态路由参数
+
+  + `routes:[{ path: "/user/:id" }]`
+  + `<router-link :to="{name:'name', params:{id:1}}">`
+
++ vue.html#/user?id = 1  query
+
+  + `<router-link :to="{name:'name', query:{id:1}}">`
+
++ 参数接收
+
+  ` created() { console.log(this.$route.params); }`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+       
+	<!-- 引包 -->
+	<script type="text/javascript" src="vue.js"></script>
+    <!-- 引包 引入 核心的插件vue-router -->
+	<script type="text/javascript" src="vue-router.js"></script>
+	<script type="text/javascript">
+
+        // 地址栏 路由范式
+            // 1. xxxxx.html#/user/1    params 动态路由参数
+            // 2. ooooo.html#/user?id = 1  query
+
+        // 让vue使用该VueRouter创建 如果vue是一个局部作用域的对象 那么必须Vue.use(VueRouter);
+        // Vue.use(VueRouter);
+
+        // 声明组件
+        let UserParams = {
+            template: `<h3>UserParams</h3>`,
+            created() {
+                // {id: 1}
+                console.log(this.$route.params);
+                // undefined
+                console.log(this.$routes);
+            },
+
+        };
+        
+        let UserQuery = {
+            template: `<h3>register</h3>`,
+            created() {
+                // {id: 1}
+                console.log(this.$route.query);
+                // undefined
+                console.log(this.$routes);
+            },
+        };
+       
+
+        // 创建路由对象
+        let router = new VueRouter({
+            // 配置路由对象
+            routes: [
+                // 路由匹配的规则
+                {   
+                    // 动态路由参数 以冒号开头
+                    // #/user/1
+                    path: "/user/:id",
+                    name: "userP",
+                    component: UserParams
+                },
+                {   
+                    // #/user?id=1
+                    path: "/user",
+                    name: "userQ",
+                    component: UserQuery
+                }
+            ]
+        });
+
+        // 抛出两个全局的组件 router-link  router-view
+        // 抛出了两个对象  $router  $route (路由信息对象)挂载到了Vue实例化对象
+        let App = {
+            template: `
+                <div>
+                    <!-- router-link默认会被渲染成a标签，to默认会被渲染成href属性 -->
+                    <router-link :to="{name:'userP', params:{id:1}}">userP</router-link>
+                    <router-link :to="{name:'userQ', query:{id:1}}">userQ</router-link>
+
+                    <!-- 路由组件的出口 -->
+                    <router-view></router-view>
+                </div>
+            `,
+            
+        };
+
+        // 将配置好的路由对象关联到vue实例化对象中
+        new Vue({
+            el: "#app",
+            router: router,
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+	</script>
+</body>
+</html>
+```
+
+
+
+### 嵌套路由
+
++ 子模块 DOM 结构 `不相同`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <!-- 引包 -->
+	<script type="text/javascript" src="vue.js"></script>
+    <!-- 引包 引入 核心的插件 vue-router -->
+	<script type="text/javascript" src="vue-router.js"></script>
+    <script>
+        Vue.use(VueRouter);
+        // 创建组件
+        let Song = {
+            template: `<div>Song</div>`,
+        };
+
+        let Movie = {
+            template: `<div>Movie</div>`,
+        };
+
+        let Home ={
+            template: `
+                <div>
+                    <router-link to="/home/song">song</router-link>
+                    <router-link to="/home/movie">movic</router-link>
+                    <router-view></router-view>
+                </div>`
+        }
+
+        let router = new VueRouter({
+            routes: [
+                {
+                    path: "/home",
+                    component: Home,
+                    children: [
+                        {
+                            // path: "/home/song",
+                            path: "song",
+                            component: Song,
+
+                        },
+                        {
+                            path: "/home/movie", 
+                            component: Movie,                   
+                        }
+                    ]
+                }
+            ]
+        });
+
+        let App = {
+            template: `
+                <div>
+                    <router-link to="/home">Home</router-link>
+                    <router-view></router-view>
+                </div>`,
+        };
+
+        new Vue({
+            el: "#app",
+            router,
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+    </script>
+</body>
+</html>
+```
+
+
+
+### 动态路由
+
++ 子模块 DOM 结构 `相同`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <!-- 引包 -->
+	<script type="text/javascript" src="vue.js"></script>
+    <!-- 引包 引入 核心的插件vue-router -->
+	<script type="text/javascript" src="vue-router.js"></script>
+    <script>
+        let ComDesc = {
+            template: `<div>{{ msg }}</div>`,
+            data() {
+                return {
+                    msg: '',
+                }
+            },
+            created() {
+                this.msg = 'Android';
+            },
+            watch: {
+                $route: function(to, from) {
+                    // 对路由变化作出响应...
+                    console.log(to);
+                    console.log(from);
+                    this.msg = to.params.id;
+
+                }
+            }
+        };
+
+        let Timeline = {
+            template: `
+                <div>
+                    <router-link :to='{name:"comDesc", params:{id:"Android"}}'>Android</router-link>
+                    <router-link :to='{name:"comDesc", params:{id:"Frontend"}}'>Frontend</router-link>
+                    <router-view></router-view>
+                </div>
+            `,
+            
+        }
+
+
+        let Pins = {
+            template: `<div>Pins</div>`
+        };
+
+        const router = new VueRouter({
+            routes: [
+                {
+                    path: 'timeline',
+                    name:'timeline',
+                    component: Timeline,
+                    children: [
+                        {
+                            path: 'timeline/:id',
+                            name:  'comDesc',
+                            component: ComDesc,
+                            
+                        }
+                    ] 
+                },
+                {
+                    path: 'pins',
+                    name:'pins',
+                    component: Pins,
+                }
+            ]    
+        });
+        
+        let App = {
+            template: `
+                <div>
+                    <router-link :to='{name:"timeline"}'>timeline</router-link>
+                    <router-link :to='{name:"pins"}'>pins</router-link>
+                    <router-view></router-view>
+                </div>
+            `,
+        };
+
+        new Vue({
+            el: '#app',
+            router,
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+    </script>
+</body>
+</html>
+```
+
+
+
+### 编程式路由
+
+
+
+
+
+
+
+### meta和router.beforeEach
+
++ meta
+
++ 全局路由router.beforeEach
+
+
+
