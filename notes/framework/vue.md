@@ -103,7 +103,7 @@
   + `v-for`
   + `v-bind`    单向数据绑定
   + `v-model`  双向数据绑定
-  + `v-on`
+  + `v-on`         事件绑定
 
 
 
@@ -1670,7 +1670,7 @@
 ### 获取DOM元素
 
 + 绑定： `<tag ref="name"></tag>`
-  + `ref` 属性值 不能重名
+  + `ref` 属性值 不能重名	
 + 获取：`this.$refs.name`
 
 
