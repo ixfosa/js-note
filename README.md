@@ -27,11 +27,17 @@
 
 
 
-
-
-
-
-
++ [Vue](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=起步-hello-vue)
+  + [起步 Hello Vue](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=起步-hello-vue)
+  + [插值表达式](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=插值表达式)
+  + [Vue 指令](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=vue-指令)
+  + [Vue 组件](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=vue-组件)
+  + [过滤器](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=过滤器)
+  + [监视改动 watch](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=监视改动-watch)
+  + [属性计算 computed](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=属性计算-computed)
+  + [组件生命周期](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=组件生命周期)
+  + [获取DOM元素及添加事件](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=获取dom元素及添加事件)
+  + [vue-router](http://jsnotes.ixfosa.top/#/notes/framework/vue?id=vue-router)
 
 
 + [Nodejs]()
