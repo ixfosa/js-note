@@ -2372,9 +2372,72 @@ window.onhashchange = function() {
 
 ### 编程式路由
 
+#### router.push()
+
+除了使用 `<router-link>` 创建 a 标签来定义导航链接，还可以借助 **router 的实例方法**，通过编写代码来实现。
+
+```js
+router.push(location, onComplete?, onAbort?)
+```
+
+> 注意：在 Vue 实例内部，可以通过 `$router` 访问路由实例。因此可以调用 `this.$router.push`。
+
+ 
+
+点击 `<router-link :to="...">` 等同于调用 `router.push(...)`。
+
+| 声明式                    | 编程式             |
+| ------------------------- | ------------------ |
+| `<router-link :to="...">` | `router.push(...)` |
 
 
 
+该方法的参数可以是一个字符串路径，或者一个描述地址的对象。例如：
+
+```js
+// 字符串
+router.push('home')
+
+// 对象
+router.push({ path: 'home' })
+
+// 命名的路由
+router.push({ name: 'user', params: { userId: '123' }})
+
+// 带查询参数，变成 /register?plan=private
+router.push({ path: 'register', query: { plan: 'private' }})
+```
+
+**注意：如果提供了 `path`，`params` 会被忽略，上述例子中的 `query` 并不属于这种情况。取而代之的是下面例子的做法，你需要提供路由的 `name` 或手写完整的带有参数的 `path`：**
+
+```js
+const userId = '123'
+router.push({ name: 'user', params: { userId }}) // -> /user/123
+router.push({ path: `/user/${userId}` }) // -> /user/123
+// 这里的 params 不生效
+router.push({ path: '/user', params: { userId }}) // -> /user
+```
+
+
+
+#### router.go(n)
+
+这个方法的参数是一个整数，意思是在 history 记录中向前或者后退多少步，类似 `window.history.go(n)`。
+
+```js
+// 在浏览器记录中前进一步，等同于 history.forward()
+router.go(1)
+
+// 后退一步记录，等同于 history.back()
+router.go(-1)
+
+// 前进 3 步记录
+router.go(3)
+
+// 如果 history 记录不够用，失败
+router.go(-100)
+router.go(100)
+```
 
 
 
@@ -2383,6 +2446,139 @@ window.onhashchange = function() {
 + meta
 
 + 全局路由router.beforeEach
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 声明式的导航 -->
+			<router-link to='/home'>首页</router-link>
+			<router-link to='/blog'>博客</router-link>
+			<router-link to='/login'>登录</router-link>
+			<a href="javascript:void(0);" @click='loginout'>退出</a>
+			<router-view></router-view>
+		</div>
+
+		<script src="vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="vue-router.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript">
+			Vue.use(VueRouter);
+			let Home = {
+				template: `
+	
+				   <div>
+					我是首页
+				   </div>
+				`
+			};
+
+			let Blog = {
+				template: `
+
+		   	   <div>
+		   	   	我是博客
+		   	   </div>
+			`
+			};
+
+			let Login = {
+				template: `
+					<div>
+						<input type="text" v-model="name">
+						<input type="password" v-model="pwd">
+						<input type="button" value=" login" @click="login">
+					</div>
+				`,
+				data() {
+					return {
+						name: "",
+						pwd: ""
+					};
+				},
+				methods: {
+					login() {
+						localStorage.setItem('user', {
+							name: this.name,
+							pwd: this.pwd
+						});
+
+						// 编程式导航
+						this.$router.push({
+							name: 'blog'
+						});
+
+					}
+				}
+			};
+
+
+			let router = new VueRouter({
+				routes: [{
+						path: "/",
+						redirect: "/home"
+					},
+					{
+						path: "/home",
+						component: Home
+					},
+					{
+						path: "/blog",
+						name: "blog",
+						component: Blog,
+						meta: {
+							// 表明用户访问该组件是需要登录
+							auth: true
+						}
+					},
+					{
+						path: "/login",
+						component: Login
+					}
+				]
+			});
+
+			router.beforeEach((to, from, next) => {
+				console.log(to);
+				console.log(from);
+				if (to.meta.auth) { 
+                    // 用户点击了博客链接 该用户未登录 需要登录判断 准备跳转登录页面
+					if (localStorage.getItem('user')) {
+						// 不为空 放行
+						next();
+					} else {
+						// alert(2);
+						// 用户需要登录
+						next({
+							path: '/login'
+						});
+					}
+				} else {
+					// 直接放行
+					next(); //如果不调用next 就会卡住
+				}
+			});
+
+			new Vue({
+				el: "#app",
+				router,
+				methods: {
+					loginout() {
+						localStorage.removeItem('user');
+						this.$router.push('/login');
+					}
+				}
+			});
+		</script>
+
+	</body>
+</html>
+```
 
 
 
