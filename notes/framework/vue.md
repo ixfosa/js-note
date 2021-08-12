@@ -2582,3 +2582,106 @@ router.go(100)
 
 
 
+### keep-alive在路由中的使用
+
+`keep-alive` 是Vue提供的一个抽象组件，用来对组件进行缓存，从而节省性能，由于是一个抽象组件，所以在页面渲染完毕后**不会被渲染成一个DOM元素**
+
+当组件在 `keep-alive` 内被切换时组件的**activated、mounted**这两个生命周期钩子函数会被执行
+
+被包裹在keep-alive中的组件的状态将会被保留, `destroyed` 生命周期钩子函数不会被执行
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+
+		</div>
+
+		<script src="vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="vue-router.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript">
+			Vue.use(VueRouter);
+
+			let Series = {
+				template: `
+					<div>
+						<h3>付费栏目</h3>
+					</div>
+				`,
+				created() {
+					console.log('付费栏目组件created');
+				},
+				mounted() {
+					console.log('付费栏目组件mounted');
+				},
+				destroyed() {
+					console.log('付费栏目组件被销毁了')
+				}
+			};
+			let Topics = {
+				template: `
+					<div>
+						<h3 @click = 'clickHandler'>专题广场</h3>
+					</div>
+				`,
+				methods: {
+					clickHandler(e) {
+						e.target.style.color = 'red';
+					}
+				},
+				created() {
+					console.log('专题广场组件created');
+				},
+				mounted() {
+					console.log('专题广场组件mounted');
+				},
+				destroyed() {
+					console.log('专题广场组件被销毁了')
+				}
+			};
+
+			let router = new VueRouter({
+				routes: [{
+						path: "/series",
+						component: Series
+					},
+					{
+						path: "/topics",
+						component: Topics
+					}
+				]
+			});
+
+			let App = {
+				template: `
+					<div>
+						<router-link to = '/series'>付费栏目</router-link>
+						<router-link to = '/topics'>专题广场</router-link>
+						<keep-alive>
+							<router-view></router-view>
+						</keep-alive>
+					</div>
+				`,
+			};
+
+			new Vue({
+				el: '#app',
+				template: `<App />`,
+				components: {
+					App
+				},
+				router
+			});
+		</script>
+	</body>
+</html>
+```
+
+
+
