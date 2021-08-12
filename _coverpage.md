@@ -1,6 +1,6 @@
 <!-- _coverpage.md -->
 
-<img src="_media/javascript.svg" alt="logo" style="zoom:300%;" />
+<img src="_media/javascript.png" alt="logo" style="zoom: 67%;" />
 
 # **Hello  JavaScript**
 
