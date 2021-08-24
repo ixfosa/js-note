@@ -1805,7 +1805,7 @@
 
 
 
-## vue-router
+## Vue Router
 
 ### 前端路由原理
 
@@ -2682,6 +2682,20 @@ router.go(100)
 	</body>
 </html>
 ```
+
+
+
+## Vuex
+
+
+
+## Vue CLI
+
+
+
+
+
+## Webpack
 
 
 
