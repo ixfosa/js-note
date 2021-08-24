@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        .head {
+            width: 100%;
+            height: 60px;
+            background-color: yellowgreen;
+        }
+
+        .main-content {
+            width: 100%;
+            height: 500px;
+            display: flex;
+        }
+
+        .aside {
+            width: 25%;
+            height: 100%;
+            background-color: green;
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+            background-color: pink;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+
+        // 子组件
+        let Vheader = {
+            template: `
+                <div class="head">
+                    header
+                </div>
+            `,
+        };
+        let Vaside = {
+            template: `
+                <div class="aside">
+                    aside
+                </div>
+            `,
+        };
+        let Vcontent = {
+            template: `
+                <div class="content">
+                    content
+                </div>
+            `,
+        };
+
+        // 1.声明局部组件
+        let App = {
+            template: `
+                <div class="main">
+                    <Vheader></Vheader>
+                    <div class="main-content">
+                        <Vaside></Vaside>
+                        <Vcontent></Vcontent>
+                    </div>
+                </div>
+            `,
+            components: {
+                Vheader,
+                Vaside,
+                Vcontent
+            }
+        }
+
+
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+             // 2.挂载组件
+             components: {
+                App
+            },
+            template: `<App></App>`
+        });
+	</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        .box {
+            width: 300px;
+            height: 300px;
+            background-color: yellowgreen;
+        }
+    
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+
+
+
+        // 子组件
+        let Vbox = {
+            template: `
+                <div class="box">
+                    <ul>
+                        <li v-for = "(item, idx) in users">
+                            {{ item.name }}    
+                        </li>   
+                    </ul>
+                </div>
+            `,
+            props: ["users"]
+        };
+
+
+        // 1.声明局部组件
+        let App = {
+            template: `
+                <div class="main">
+                    <Vbox :users="users"></Vbox>
+                </div>
+            `,
+            components: {
+                Vbox
+            },
+            data: function() {
+                return {
+                    users: [
+                        {id: 1, name: "ixfosa"},
+                        {id: 2, name: "long"},
+                        {id: 3, name: "zhong"}
+                    ]
+                };
+            }
+        }
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+             // 2.挂载组件
+             components: {
+                App
+            },
+            template: `<App></App>`
+        });
+	</script>
+</body>
+</html>

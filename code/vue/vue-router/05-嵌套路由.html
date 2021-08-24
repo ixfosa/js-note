@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <!-- 引包 -->
+	<script type="text/javascript" src="vue.js"></script>
+    <!-- 引包 引入 核心的插件vue-router -->
+	<script type="text/javascript" src="vue-router.js"></script>
+    <script>
+        Vue.use(VueRouter);
+        // 创建组件
+        let Song = {
+            template: `<div>Song</div>`,
+        };
+
+        let Movie = {
+            template: `<div>Movie</div>`,
+        };
+
+        let Home ={
+            template: `
+                <div>
+                    <router-link to="/home/song">song</router-link>
+                    <router-link to="/home/movie">movic</router-link>
+                    <router-view></router-view>
+                </div>`
+        }
+
+        let router = new VueRouter({
+            routes: [
+                {
+                    path: "/home",
+                    component: Home,
+                    children: [
+                        {
+                            // path: "/home/song",
+                            path: "song",
+                            component: Song,
+
+                        },
+                        {
+                            path: "/home/movie", 
+                            component: Movie,                   
+                        }
+                    ]
+                }
+            ]
+        });
+
+        let App = {
+            template: `
+                <div>
+                    <router-link to="/home">Home</router-link>
+                    <router-view></router-view>
+                </div>`,
+        };
+
+        new Vue({
+            el: "#app",
+            router,
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+    </script>
+</body>
+</html>

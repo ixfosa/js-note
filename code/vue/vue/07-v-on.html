@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+		.po{
+			color: red;
+		}
+		.active{
+			color: green;
+		}
+	</style>
+</head>
+<body>
+    <div id="app"></div>
+
+	<script type="text/javascript" src="vue.js"></script>
+
+	<script type="text/javascript">
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+            template: `
+                <div>
+                    <p class ='po' :class = "{ active: isRed }">v-bind</p>
+
+                    <button v-on:click="change">切换字体的颜色</button>
+
+                   <!--  <button @click="{isRed = !isRed}">切换字体的颜色</button> -->
+                </div>
+            `,
+            data: function() {
+                return {
+                    isRed: true
+                };
+            },
+            methods: {
+                change() {
+                    this.isRed = !this.isRed;
+                }
+            }
+        });
+	</script>
+</body>
+</html>

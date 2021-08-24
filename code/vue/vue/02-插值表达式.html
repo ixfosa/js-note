@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p>{{ obj.name }}</p>
+        <p>{{ msg}}</p>
+        <p>{{ bool}}</p>
+        <p>{{ expr }}</p>
+    </div>
+    <script type="text/javascript" src="./vue.js"></script>
+
+    <script>
+        /*
+            + 对象 (不要连续3个`{{{name:'ixfosa'}}}` , `{{ {name:'ixfosa'} }}`)
+            + 字符串 {{ 'xxx' }}
+            + 判断后的布尔值  {{  true }}
+            + 三元表达式  {{ true?'是正确':'错误'  }}
+        */
+        // 数据对象
+        // data 加入到一个 Vue 实例中
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    obj: {name: "ixfsoa"},
+                    msg: "Hello Vue",
+                    bool: 1 === 1,
+                    expr: true ? false : true
+                };
+            }
+        });
+        
+       
+            
+    </script>
+</body>
+</html>

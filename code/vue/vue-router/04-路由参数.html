@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+       
+	<!-- 引包 -->
+	<script type="text/javascript" src="vue.js"></script>
+    <!-- 引包 引入 核心的插件vue-router -->
+	<script type="text/javascript" src="vue-router.js"></script>
+	<script type="text/javascript">
+
+        // 地址栏 路由范式
+            // 1. xxxxx.html#/user/1    params 动态路由参数
+            // 2. ooooo.html#/user?id = 1  query
+
+        // 让vue使用该VueRouter创建 如果vue是一个局部作用域的对象 那么必须Vue.use(VueRouter);
+        // Vue.use(VueRouter);
+
+        // 声明组件
+        let UserParams = {
+            template: `<h3>UserParams</h3>`,
+            created() {
+                // {id: 1}
+                console.log(this.$route.params);
+                // undefined
+                console.log(this.$routes);
+            },
+
+        }
+        let UserQuery = {
+            template: `<h3>register</h3>`,
+            created() {
+                // {id: 1}
+                console.log(this.$route.query);
+                // undefined
+                console.log(this.$routes);
+            },
+        }
+       
+
+        // 创建路由对象
+        let router = new VueRouter({
+            // 配置路由对象
+            routes: [
+                // 路由匹配的规则
+                {   
+                    // 动态路由参数 以冒号开头
+                    // #/user/1
+                    path: "/user/:id",
+                    name: "userP",
+                    component: UserParams
+                },
+                {   
+                    // #/user?id=1
+                    path: "/user",
+                    name: "userQ",
+                    component: UserQuery
+                }
+            ]
+        });
+
+        // 抛出两个全局的组件 router-link  router-view
+        // 抛出了两个对象  $router  $route (路由信息对象)挂载到了Vue实例化对象
+        let App = {
+            template: `
+                <div>
+                    <!-- router-link默认会被渲染成a标签，to默认会被渲染成href属性 -->
+                    <router-link :to="{name:'userP', params:{id:1}}">userP</router-link>
+                    <router-link :to="{name:'userQ', query:{id:1}}">userQ</router-link>
+
+                    <!-- 路由组件的出口 -->
+                    <router-view></router-view>
+                </div>
+            `,
+            
+        }
+
+
+        // 将配置好的路由对象关联到vue实例化对象中
+        new Vue({
+            el: "#app",
+            router: router,
+            template: `<App />`,
+            components: {
+                App
+            }
+        });
+	</script>
+</body>
+</html>

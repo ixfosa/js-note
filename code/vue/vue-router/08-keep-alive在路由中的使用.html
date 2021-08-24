@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+
+		</div>
+
+		<script src="vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="vue-router.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript">
+			Vue.use(VueRouter);
+
+			let Series = {
+				template: `
+					<div>
+						<h3>付费栏目</h3>
+					</div>
+				`,
+				created() {
+					console.log('付费栏目组件created');
+				},
+				mounted() {
+					console.log('付费栏目组件mounted');
+				},
+				destroyed() {
+					console.log('付费栏目组件被销毁了')
+				}
+			};
+			let Topics = {
+				template: `
+					<div>
+						<h3 @click = 'clickHandler'>专题广场</h3>
+					</div>
+				`,
+				methods: {
+					clickHandler(e) {
+						e.target.style.color = 'red';
+					}
+				},
+				created() {
+					console.log('专题广场组件created');
+				},
+				mounted() {
+					console.log('专题广场组件mounted');
+				},
+				destroyed() {
+					console.log('专题广场组件被销毁了')
+				}
+			};
+
+			let router = new VueRouter({
+				routes: [{
+						path: "/series",
+						component: Series
+					},
+					{
+						path: "/topics",
+						component: Topics
+					}
+				]
+			});
+
+			let App = {
+				template: `
+					<div>
+						<router-link to = '/series'>付费栏目</router-link>
+						<router-link to = '/topics'>专题广场</router-link>
+						<keep-alive>
+							<router-view></router-view>
+						</keep-alive>
+					</div>
+				`,
+			};
+
+			new Vue({
+				el: '#app',
+				template: `<App />`,
+				components: {
+					App
+				},
+				router
+			});
+		</script>
+	</body>
+</html>

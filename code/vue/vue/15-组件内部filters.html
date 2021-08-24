@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="app"></div>
+    
+	<script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+    
+        // 全局过滤器
+
+		Vue.filter('myReverse',function(value, arg) {
+			
+			return arg + ' ' + value.split('').reverse().join('');
+		});
+
+        /*
+        在组件内部用 filters:{
+			过滤器的名字:function(value){
+
+				// 内部一定要return 
+	
+			}
+
+			调用过滤器 ：  数据属性 | 过滤器的名字
+		}
+		*/
+
+        let App = {
+            template: `
+                <div>
+                    <input type="number" v-model="price" />
+                    <p>{{ price | myCurrentcy }}</p>    
+                    <p>{{ msg | myReverse("haha") }}</p>
+                </div>
+            `,
+            filters: {
+                myCurrentcy(value) {
+                    return "¥" + value;
+                }
+            },
+            data() {
+                return {
+                    price: 0
+                };
+            },
+            props: ["msg"]
+        }
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    msg: "euV olleH"
+                };
+            },
+            components: {
+                App
+            },
+            template: `<App :msg="msg"></App>`
+        });
+	</script>
+</body>
+</html>

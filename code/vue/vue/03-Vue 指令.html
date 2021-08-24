@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+
+
+    <script type="text/javascript" src="./vue.js"></script>
+    <script>
+
+
+        new Vue({
+            el: "#app",
+            template: `
+                <div>
+                    <div v-text = "text"></div>
+                    <div v-html = "html"></div>
+
+                    <div v-show = "isShow"> isShow </div>
+
+                    <div v-if = "isShow"> v-if</div> 
+
+                    <div v-if = "Math.random() > 0.5">
+                        此值大于0.5
+                    </div>
+                    <div v-else>
+                        此值大于0.5
+                    </div >
+
+                    <dl v-for = "(item, index) in users">
+                        <dt>{{ item.name }}</dt>
+                        <dd>{{ item.gender }}</dd>
+                    </dl>
+
+
+                    <ul v-for = "(v, k) in obj">
+                        <li>
+                            {{ k }} -- {{ v }}
+                        </li>
+                    </ul>
+
+                    <ul v-for = "(item, index) in arr">
+                        <li>
+                            <ul v-for = "(item, index) in item">
+                                <li> {{ item }} </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            `,
+            data() {
+                return {
+                    text: "<h3> text </h3>",
+                    html: "<h3> html </h3>",
+
+                    isShow: false,
+
+                    users: [
+                        {name: "ixfosa", gender: "男"},
+                        {name: "long", gender: "女"},
+                        {name: "zhong", gender: "女"},
+                    ],
+
+                    obj: {
+                        name:'ixfosa',
+						age:18,
+						fav:'coding'
+                    },
+
+                    arr: [
+                        [1, 2, 3],
+                        [1, 2, 3],
+                    ]
+
+                };
+                   
+            }
+        });
+      
+    </script>
+</body>
+</html>

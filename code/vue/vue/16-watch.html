@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model = "msg" />
+        <p>{{ msg }}</p>
+        <button @click="user.name='long'">改变</button>
+        <p>{{ user.name }}</p>
+    </div>
+
+    <script type="text/javascript" src="vue.js"></script>
+	<script type="text/javascript">
+        new Vue({
+            el: "#app",
+            data: function () {
+                return {
+                    msg: "",
+                    user: {name: "ixfosa"}
+                };
+            },
+            watch: {
+                msg: function(newV, oldV) {
+                    console.log(newV, oldV)
+                    if (oldV == "long") {
+                        alert("Hello Long");
+                    }
+                },
+
+                // 监听复杂数据类型  object, array 深度监视  
+                user: {
+                    deep: true,
+                    handler: function(newV, oldV) {
+                        alert(oldV.name);
+                    }
+                }
+            }
+        });
+    
+    </script>
+
+
+</body>
+</html>

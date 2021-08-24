@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .po{
+			font-size: 30px;
+		}
+		.active{
+			color: green;
+		}
+    </style>
+</head>
+<body>
+    <div id="app">
+        
+	</div>
+
+
+	<!-- 1.引包 -->
+	<script type="text/javascript" src="vue.js"></script>
+
+	<script type="text/javascript">
+
+        // 创建实例化vue对象
+        new Vue({
+            el: "#app",
+            template: `
+                <div>
+                    <!-- active 没有添加到 class -->
+                    <p class ='po' v-bind:calss = "active">v-bind</p>
+                    <!-- 简写 v-bind:calss = :calss -->
+                    <p class ='po' :class = "{ active:isRed }">v-bind</p>    
+                </div>
+            `,
+            data: function() {
+                return {
+                    isRed: true
+                };
+            }
+        });
+	</script>
+</body>
+</html>
